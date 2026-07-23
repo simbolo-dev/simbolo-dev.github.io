@@ -1,0 +1,566 @@
+/* ============================================================
+   HERO — Alan Alarcón · Creative Technology & Design
+   Warm light theme: a carved wood-grain "line relief" background
+   with a soft cloud that follows the cursor
+   ============================================================ */
+
+:root {
+  --ink: #221f1c;               /* primary text: warm near-black */
+  --ink-soft: #6b6156;          /* secondary text: muted brown */
+  --paper: #faf8f4;             /* base "canvas" — warm white */
+  --pill-light: #faf8f4;
+  --pill-dark: #221f1c;         /* dark pill (primary CTA) */
+  --pill-gray: #55504a;
+  --accent: #23d160;
+  --display: 'Anton', sans-serif;
+  --sans: 'Inter', system-ui, sans-serif;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+html, body { height: 100%; }
+
+body {
+  font-family: var(--sans);
+  color: var(--ink);
+  background: var(--paper);
+  overflow-x: hidden;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+/* ---- Background: full-screen WebGL canvas ---- */
+#bg-canvas {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: -1;
+  display: block;
+}
+
+/* ---- Nav ---- */
+/* overlay (out of flow) so .hero (100vh) starts at the real top edge —
+   if the nav took height in the flow, the hero's vertical centering
+   would shift down by that same amount */
+.nav { position: absolute; top: 0; left: 0; right: 0; z-index: 10; padding: 28px 0 0; }
+.nav nav {
+  display: flex;
+  justify-content: center;
+  gap: 56px;
+}
+.nav a {
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink);
+  text-decoration: none;
+  padding: 6px 2px;
+  border-bottom: 2px solid transparent;
+  transition: border-color 0.25s;
+}
+.nav a:hover { border-color: var(--ink); }
+
+/* toast on clicking "Get in touch": shows the email (and confirms the
+   clipboard copy) — see main.js; exists because mailto: with no mail
+   client configured produces nothing visible */
+.mail-toast {
+  position: fixed;
+  top: 74px;
+  left: 50%;
+  transform: translateX(-50%) translateY(-8px);
+  background: var(--pill-dark);
+  color: #fff;
+  font-size: 13px;
+  font-weight: 500;
+  padding: 10px 18px;
+  border-radius: 999px;
+  box-shadow: 0 6px 22px rgba(34, 31, 28, 0.25);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s, transform 0.3s;
+  z-index: 20;
+}
+.mail-toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+/* ---- Language toggle (EN/ES) ---- */
+/* fixed top-right on every page; label shows the language you'd switch TO.
+   See js/i18n.js — choice persists in localStorage across pages. */
+.lang-toggle {
+  position: fixed;
+  top: 22px;
+  right: clamp(16px, 4vw, 44px);
+  z-index: 30;
+  background: rgba(255, 255, 255, 0.45);
+  border: 1.5px solid rgba(34, 31, 28, 0.28);
+  color: var(--ink);
+  font-family: var(--sans);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  padding: 6px 13px;
+  border-radius: 999px;
+  cursor: pointer;
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  transition: background 0.2s, transform 0.2s;
+}
+.lang-toggle:hover { background: rgba(255, 255, 255, 0.8); transform: translateY(-1px); }
+.lang-toggle:active { transform: scale(0.96); }
+
+/* ---- Cinematic scroll zone (hero → About Me) ---- */
+/* extra height the scroll "consumes" while .hero stays pinned; see
+   js/scroll-reveal.js for the progress math. 330vh = 3 acts of 110vh
+   (intro→crossover, About Me, Iron Sentinel + chat) */
+.hero-scroll {
+  position: relative;
+  height: 330vh;
+  flex-shrink: 0;   /* body is flex column: without this the height collapses to 100vh */
+}
+.hero-scroll.static { height: auto; }
+
+/* ---- Hero grid ---- */
+.hero {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  display: grid;
+  grid-template-columns: minmax(420px, 720px) minmax(300px, 520px);
+  justify-content: center;
+  align-items: center;
+  gap: clamp(16px, 3vw, 72px);
+  padding: 20px clamp(16px, 5vw, 72px);
+  width: 100%;
+  max-width: 1440px;
+  margin: 0 auto;
+  overflow: hidden;   /* in case a scrub transform grazes the edge */
+}
+.hero-scroll.static .hero {
+  position: relative;
+  height: auto;
+  min-height: 100vh;
+  overflow: visible;
+}
+
+/* .intro and .about share the SAME grid cell (column 2) — the crossfade
+   between them feels like one replacing the other, not a jump to another
+   part of the page */
+.intro, .about { grid-column: 2; grid-row: 1; }
+.stage { will-change: transform; }
+.intro { will-change: transform, opacity; }
+
+.about {
+  opacity: 0;
+  transform: translateX(24px);
+  pointer-events: none;
+  text-align: left;
+  will-change: transform, opacity;
+}
+.about-title {
+  font-family: var(--display);
+  font-weight: 400;
+  text-transform: uppercase;
+  font-size: clamp(32px, 4.5vw, 56px);
+  color: var(--ink);
+  margin-bottom: 18px;
+  line-height: 1;
+}
+.about-text {
+  font-size: 16px;
+  line-height: 1.6;
+  color: var(--ink);
+  max-width: 46ch;
+}
+.about-placeholder-note {
+  margin-top: 14px;
+  font-size: 12px;
+  color: var(--ink-soft);
+  opacity: 0.7;
+  font-style: italic;
+}
+.hero-scroll.static .about {
+  grid-row: 2;
+  opacity: 1;
+  transform: none;
+  pointer-events: auto;
+  margin-top: 32px;
+}
+.hero-scroll.static .intro { opacity: 1; transform: none; }
+.hero-scroll.static .stage { transform: none; }
+
+/* ---- 3D stage ---- */
+.stage {
+  position: relative;
+  width: min(100%, 720px);   /* without this the canvas shrinks to its intrinsic size (300px) */
+  aspect-ratio: 6 / 5;   /* wider than 3:4 — with the offset camera (-0.42) the frustum's right margin is narrow; the Iron Sentinel overflowed it while spinning */
+  max-height: 78vh;
+  justify-self: end;     /* hugging the name column */
+  user-select: none;
+  touch-action: none;    /* drag rotates the character, doesn't scroll */
+  -webkit-tap-highlight-color: transparent;
+  cursor: grab;          /* fallback when the custom dot cursor doesn't apply */
+}
+.stage:active { cursor: grabbing; }
+#char-canvas {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+/* ellipse under the feet: position calibrated to the projection of (0,0,0)
+   with the offset camera (-0.42) — if you move the camera OR the .stage
+   aspect-ratio, recalibrate (the horizontal % depends on aspect: wider =
+   the world origin lands closer to the canvas center) */
+.stage-shadow {
+  position: absolute;
+  left: 64%;
+  bottom: 17%;
+  width: 34%;
+  height: 4.5%;
+  transform: translateX(-50%);
+  background: radial-gradient(ellipse at center, rgba(50, 40, 30, 0.25), transparent 70%);
+  border-radius: 50%;
+  pointer-events: none;
+  transition: opacity 0.2s;   /* NOT transform: updated precisely per frame in scroll-reveal.js */
+}
+
+.stage-loader {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ink-soft);
+  transition: opacity 0.5s;
+}
+.stage-loader.hide { opacity: 0; pointer-events: none; }
+.stage-loader-ring {
+  width: 42px;
+  height: 42px;
+  border: 3px solid rgba(34, 31, 28, 0.12);
+  border-top-color: var(--ink);
+  border-radius: 50%;
+  animation: spin 0.9s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.stage-hint {
+  position: absolute;
+  left: 50%;
+  bottom: -6px;
+  transform: translateX(-50%);
+  white-space: nowrap;
+  font-size: 12px;
+  color: var(--ink-soft);
+  opacity: 0;
+  transition: opacity 0.4s;
+  pointer-events: none;
+}
+.stage:hover .stage-hint.ready { opacity: 0.75; }
+
+/* ---- Name and actions ---- */
+.intro {
+  position: relative;
+  z-index: 0;   /* anchors the ::before below between the background and the text */
+  text-align: left;
+}
+/* "clarity scrim": lightens the background right behind the text to
+   guarantee contrast wherever the color blobs happen to be — moves with
+   the responsive layout on its own */
+.intro::before {
+  content: '';
+  position: absolute;
+  inset: -14% -10%;
+  background: radial-gradient(ellipse at 30% 40%, var(--paper) 0%, transparent 68%);
+  opacity: 0.75;
+  filter: blur(26px);
+  z-index: -1;
+  pointer-events: none;
+}
+
+.name {
+  font-family: var(--display);
+  font-weight: 400;   /* Anton ships a single weight — already very heavy by design */
+  text-transform: uppercase;
+  color: var(--ink);
+  line-height: 0.92;
+  display: flex;
+  flex-direction: column;
+}
+.name-first { font-size: clamp(56px, 8.5vw, 108px); letter-spacing: 0.01em; }
+.name-last  { font-size: clamp(40px, 6.2vw, 78px);  letter-spacing: 0.06em; font-weight: 600; }
+
+.tagline {
+  margin-top: 26px;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--ink-soft);
+}
+
+.actions {
+  margin-top: 44px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  align-items: flex-start;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--sans);
+  font-size: 15px;
+  font-weight: 500;
+  text-decoration: none;
+  padding: 14px 30px;
+  border-radius: 999px;
+  transition: transform 0.2s, box-shadow 0.2s, background 0.2s;
+}
+.btn:active { transform: scale(0.97); }
+.btn-ico { font-size: 15px; transition: transform 0.2s; }
+
+.btn-primary {
+  background: var(--pill-dark);
+  color: #fff;
+  box-shadow: 0 4px 18px rgba(34, 31, 28, 0.22);
+}
+.btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(34, 31, 28, 0.28); }
+.btn-primary:hover .btn-ico { transform: translateX(3px); }
+
+.btn-ghost {
+  background: rgba(255, 255, 255, 0.35);
+  color: var(--ink);
+  border: 1.5px solid rgba(34, 31, 28, 0.55);
+}
+.btn-ghost:hover { background: rgba(255, 255, 255, 0.65); transform: translateY(-2px); }
+.btn-ghost:hover .btn-ico { transform: translateY(2px); }
+
+/* reusable "disabled/coming soon" button: shown dimmed instead of as a
+   broken link; .btn-soon is the little caption underneath */
+.btn-disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+  position: relative;
+}
+.btn-disabled:hover { transform: none; box-shadow: 0 4px 18px rgba(34, 31, 28, 0.22); }
+.btn-disabled:hover .btn-ico { transform: none; }
+.btn-soon {
+  position: absolute;
+  bottom: -22px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  color: var(--ink-soft);
+  white-space: nowrap;
+  opacity: 0.85;
+}
+
+/* ---- AI Clone ----
+   Act 3 of the scroll: left-aligned and vertically centered in the
+   viewport (same compositional idea as About Me — text left, character
+   right) rather than a bar stuck to the bottom edge. Hidden by default:
+   appears via opacity fade (tied to act-3 progress, see scroll-reveal.js)
+   instead of "scrolling up" with the document. In .static mode
+   (mobile/reduced-motion, no scroll-scrub) it returns to normal flow,
+   always visible, via the sibling selector below.
+
+   `.clone` is fixed → its `left` is measured against the FULL VIEWPORT,
+   but `.hero` (where the character lives) is centered in a max-width:1440px
+   container — on wider screens the two reference different frames and the
+   whole thing looks off-center (a big gap on one side). The first term of
+   the calc() reproduces the same margin `.hero{margin:0 auto}` leaves, so
+   both share the same "zero". */
+.clone {
+  width: min(360px, calc(100vw - 2 * clamp(60px, 9vw, 130px)));
+  padding: 8px 0 34px;
+  position: fixed;
+  left: calc(max(0px, (100vw - 1440px) / 2) + clamp(60px, 9vw, 130px));
+  top: 50%;
+  transform: translateY(-50%);
+  text-align: left;
+  opacity: 0;
+  pointer-events: none;
+  z-index: 5;
+}
+.hero-scroll.static ~ .clone {
+  position: relative;
+  left: auto;
+  top: auto;
+  transform: none;
+  opacity: 1;
+  pointer-events: auto;
+}
+.clone-title {
+  font-family: var(--display);
+  font-weight: 400;
+  text-transform: uppercase;
+  font-size: clamp(26px, 3.6vw, 44px);
+  color: var(--ink);
+  line-height: 1;
+  margin-bottom: 12px;
+}
+.clone-tagline {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--ink-soft);
+  margin-bottom: 22px;
+}
+
+.clone-thread {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  max-height: 180px;
+  overflow-y: auto;
+  margin-bottom: 10px;
+  scrollbar-width: thin;
+}
+.clone-thread:empty { display: none; }
+.msg {
+  max-width: 82%;
+  padding: 9px 14px;
+  border-radius: 16px;
+  font-size: 13.5px;
+  line-height: 1.45;
+  animation: msg-in 0.25s ease-out;
+}
+@keyframes msg-in { from { opacity: 0; transform: translateY(6px); } }
+.msg.user { align-self: flex-end; background: var(--pill-dark); color: #fff; border-bottom-right-radius: 4px; }
+.msg.bot  { align-self: flex-start; background: rgba(255, 255, 255, 0.75); border: 1px solid rgba(34,31,28,0.08); border-bottom-left-radius: 4px; }
+.msg.typing { color: var(--ink-soft); font-style: italic; }
+
+.clone-bar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: var(--pill-gray);
+  backdrop-filter: blur(14px) saturate(1.3);
+  -webkit-backdrop-filter: blur(14px) saturate(1.3);
+  border-radius: 999px;
+  padding: 8px 10px 8px 18px;
+  box-shadow: 0 6px 22px rgba(34, 31, 28, 0.18);
+}
+.clone-dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: var(--accent);
+  flex-shrink: 0;
+  animation: pulse 2.2s ease-in-out infinite;
+}
+@keyframes pulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(35, 209, 96, 0.55); }
+  50%      { box-shadow: 0 0 0 6px rgba(35, 209, 96, 0); }
+}
+.clone-bar input {
+  flex: 1;
+  background: none;
+  border: none;
+  outline: none;
+  color: #f2f2f2;
+  font-family: var(--sans);
+  font-size: 14px;
+}
+.clone-bar input::placeholder { color: rgba(255, 255, 255, 0.65); }
+.clone-bar button {
+  background: rgba(255, 255, 255, 0.14);
+  color: #fff;
+  border: none;
+  border-radius: 50%;
+  width: 34px;
+  height: 34px;
+  cursor: pointer;
+  font-size: 13px;
+  transition: background 0.2s;
+}
+.clone-bar button:hover { background: rgba(255, 255, 255, 0.28); }
+
+/* ---- Responsive ---- */
+@media (max-width: 880px) {
+  /* on mobile .intro is the first stacked block (order:1) — the nav as an
+     overlay would overlap "ALAN ALARCON"; return it to normal flow */
+  .nav { position: static; }
+  .hero {
+    grid-template-columns: 1fr;
+    justify-items: center;
+    gap: 8px;
+    padding-top: 8px;
+  }
+  .stage {
+    width: min(78vw, 340px);
+    aspect-ratio: 3 / 4;   /* on mobile the Sentinel never loads (see sentinel.js) — keep the original narrow framing for Polygon Man */
+    max-height: 46vh;
+    order: 2;
+    justify-self: center;
+    transform: translateX(-21%);  /* compensates the camera offset (the character sits at 71% of the canvas) */
+  }
+  .intro { order: 1; text-align: center; }
+  .intro::before { background: radial-gradient(ellipse at center, var(--paper) 0%, transparent 68%); }
+  .actions { align-items: center; }
+  .nav nav { gap: 32px; }
+  /* the cinematic effect is disabled on mobile (see scroll-reveal.js) —
+     .about always arrives here already in .static mode, it just needs
+     placing. grid-column:2 (desktop crossfade) breaks the single-column
+     stack if not reset — it creates a narrow implicit column that overflows.
+     .hero-scroll.static .about pins grid-row:2 (for the reduced-motion
+     desktop fallback, still two columns) — same specificity, so it must be
+     reset here too to win on mobile. */
+  .intro, .about { grid-column: 1; grid-row: auto; }
+  .hero-scroll.static .about { grid-row: auto; }
+  .about { order: 3; text-align: center; }
+  .about-text { max-width: 34ch; margin: 0 auto; }
+
+  /* .clone (act 3) on desktop hugs the left edge on purpose (composes with
+     the Sentinel on the right) — on mobile there's no "right" to balance,
+     so it centers like the rest of the stack */
+  .clone { text-align: center; width: min(420px, calc(100% - 32px)); margin: 0 auto; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .clone-dot { animation: none; }
+  .stage-loader-ring { animation-duration: 2s; }
+}
+
+/* ---- Custom cursor (real mouse only: fine hover) ---- */
+@media (hover: hover) and (pointer: fine) {
+  .custom-cursor,
+  .custom-cursor a,
+  .custom-cursor button,
+  .custom-cursor input,
+  .custom-cursor .btn,
+  .custom-cursor .stage {
+    cursor: none;
+  }
+}
+
+.cursor-dot {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 0;
+  height: 0;
+  pointer-events: none;
+  z-index: 9999;
+  opacity: 0;
+  transition: opacity 0.25s ease;
+}
+.cursor-dot.visible { opacity: 1; }
+
+.cursor-dot-inner {
+  width: 9px;
+  height: 9px;
+  margin: -4.5px 0 0 -4.5px;
+  border-radius: 50%;
+  background: var(--ink);
+  transition: transform 0.2s cubic-bezier(0.2, 0.8, 0.2, 1), opacity 0.2s ease;
+}
+.cursor-dot-inner.hover   { transform: scale(2.8); opacity: 0.16; }
+.cursor-dot-inner.pressed { transform: scale(0.55); }

@@ -1,0 +1,257 @@
+/* ============================================================
+   PROJECTS — projects gallery. Stylesheet kept independent from
+   css/hero.css on purpose (even though it repeats the :root block):
+   this page doesn't depend on a file meant for another one ("hero.css")
+   and can evolve on its own. If the site grows a lot more, it's worth
+   splitting those variables into a shared css/base.css.
+   ============================================================ */
+
+:root {
+  --ink: #221f1c;
+  --ink-soft: #6b6156;
+  --paper: #faf8f4;
+  --pill-dark: #221f1c;
+  --display: 'Anton', sans-serif;
+  --sans: 'Inter', system-ui, sans-serif;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+html, body { height: 100%; }
+
+body {
+  font-family: var(--sans);
+  color: var(--ink);
+  background: var(--paper);
+  overflow-x: hidden;
+  min-height: 100vh;
+}
+
+/* ---- Background: same WebGL canvas as the home (js/background.js) ---- */
+#bg-canvas {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: -1;
+  display: block;
+}
+
+/* ---- Language toggle (EN/ES) ---- */
+/* fixed top-right; label shows the language you'd switch TO. See
+   js/i18n.js — choice persists in localStorage across pages. */
+.lang-toggle {
+  position: fixed;
+  top: 22px;
+  right: clamp(16px, 4vw, 44px);
+  z-index: 30;
+  background: rgba(255, 255, 255, 0.45);
+  border: 1.5px solid rgba(34, 31, 28, 0.28);
+  color: var(--ink);
+  font-family: var(--sans);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  padding: 6px 13px;
+  border-radius: 999px;
+  cursor: pointer;
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  transition: background 0.2s, transform 0.2s;
+}
+.lang-toggle:hover { background: rgba(255, 255, 255, 0.8); transform: translateY(-1px); }
+.lang-toggle:active { transform: scale(0.96); }
+
+/* ---- Nav ---- */
+.nav { padding: 28px 0 0; }
+.nav nav {
+  display: flex;
+  justify-content: center;
+}
+.nav a {
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink);
+  text-decoration: none;
+  padding: 6px 2px;
+  border-bottom: 2px solid transparent;
+  transition: border-color 0.25s;
+}
+.nav a:hover { border-color: var(--ink); }
+
+/* ---- Header ---- */
+.projects {
+  width: 100%;
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 96px clamp(16px, 5vw, 64px) 96px;
+}
+
+.projects-title {
+  font-family: var(--display);
+  font-weight: 400;
+  text-transform: uppercase;
+  font-size: clamp(40px, 6vw, 72px);
+  line-height: 1;
+}
+
+.projects-tagline {
+  margin-top: 14px;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--ink-soft);
+}
+
+/* ---- Card grid ---- */
+.projects-grid {
+  margin-top: 56px;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 28px;
+}
+
+.project-card {
+  display: flex;
+  flex-direction: column;
+  text-decoration: none;
+  color: var(--ink);
+  background: rgba(255, 255, 255, 0.5);
+  border: 1.5px solid rgba(34, 31, 28, 0.1);
+  border-radius: 20px;
+  overflow: hidden;
+  transition: transform 0.25s, box-shadow 0.25s, background 0.25s;
+}
+.project-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 16px 32px rgba(34, 31, 28, 0.14);
+  background: rgba(255, 255, 255, 0.85);
+}
+
+.project-card-thumb {
+  aspect-ratio: 16 / 10;
+  background: linear-gradient(135deg, #dcd3c2, #b8a68a);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(34, 31, 28, 0.45);
+}
+
+.project-card-body {
+  padding: 22px 24px 26px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  flex: 1;
+}
+
+.project-card-title {
+  font-family: var(--display);
+  font-weight: 400;
+  text-transform: uppercase;
+  font-size: 22px;
+  line-height: 1.1;
+}
+
+.project-card-desc {
+  font-size: 14px;
+  line-height: 1.55;
+  color: var(--ink-soft);
+  flex: 1;
+}
+
+.project-card-cta {
+  margin-top: 10px;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  transition: transform 0.2s;
+}
+.project-card:hover .project-card-cta { transform: translateX(3px); }
+
+/* LOCKED card (project not published yet): visible but no access — it's a
+   <div>, not an <a>, so it isn't even a link. Shown dimmed, without the
+   hover "lift", and with a "not available" cursor. */
+.project-card-locked {
+  cursor: not-allowed;
+  opacity: 0.72;
+}
+.project-card-locked:hover {
+  transform: none;
+  box-shadow: none;
+  background: rgba(255, 255, 255, 0.5);
+}
+.project-card-locked .project-card-thumb {
+  filter: grayscale(0.5);
+  position: relative;
+}
+.project-card-badge {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: var(--pill-dark);
+  color: #fff;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 4px 10px;
+  border-radius: 999px;
+}
+.project-card-cta-locked {
+  color: var(--ink-soft);
+  font-style: italic;
+}
+
+/* empty slot: same size as a real card, invites filling it */
+.project-card-empty {
+  border-style: dashed;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 24px;
+  text-align: center;
+  color: var(--ink-soft);
+  font-size: 14px;
+  min-height: 220px;
+}
+
+/* ---- Custom cursor (same behavior as the home, js/cursor.js) ---- */
+@media (hover: hover) and (pointer: fine) {
+  .custom-cursor,
+  .custom-cursor a,
+  .custom-cursor button {
+    cursor: none;
+  }
+}
+.cursor-dot {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 0;
+  height: 0;
+  pointer-events: none;
+  z-index: 9999;
+  opacity: 0;
+  transition: opacity 0.25s ease;
+}
+.cursor-dot.visible { opacity: 1; }
+.cursor-dot-inner {
+  width: 9px;
+  height: 9px;
+  margin: -4.5px 0 0 -4.5px;
+  border-radius: 50%;
+  background: var(--ink);
+  transition: transform 0.2s cubic-bezier(0.2, 0.8, 0.2, 1), opacity 0.2s ease;
+}
+.cursor-dot-inner.hover   { transform: scale(2.8); opacity: 0.16; }
+.cursor-dot-inner.pressed { transform: scale(0.55); }
+
+@media (max-width: 640px) {
+  .nav nav { gap: 24px; }
+  .projects { padding-top: 72px; }
+}

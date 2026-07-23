@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title data-i18n="projTitle">Projects · Alan Alarcón</title>
+<meta name="description" data-i18n="projDesc" data-i18n-attr="content" content="Projects by Alan Alarcón — creative technologist. Generative AI, interactive 3D web, and automation." />
+
+<link rel="icon" type="image/png" sizes="32x32" href="../assets/favicon-32.png" />
+<link rel="icon" type="image/png" sizes="16x16" href="../assets/favicon-16.png" />
+<link rel="apple-touch-icon" sizes="180x180" href="../assets/apple-touch-icon.png" />
+
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="css/projects.css" />
+</head>
+<body>
+
+  <!-- same shader background as the home (js/background.js) — self-contained,
+       only needs #bg-canvas in the DOM -->
+  <canvas id="bg-canvas" aria-hidden="true"></canvas>
+
+  <button class="lang-toggle" data-lang-toggle type="button" aria-label="Cambiar a español">ES</button>
+
+  <header class="nav">
+    <nav>
+      <a href="../" data-i18n="navHome">&larr; Home</a>
+    </nav>
+  </header>
+
+  <main class="projects">
+    <h1 class="projects-title" data-i18n="projectsTitle">Projects</h1>
+    <p class="projects-tagline" data-i18n="projectsTagline">Things I've built</p>
+
+    <div class="projects-grid">
+
+      <!-- ACCESSIBLE card (template): copy this <a class="project-card"> block
+           to add a finished project — change href, thumb text, title and
+           description. The link can be a folder in this same site (e.g.
+           "my-project/") or an external URL (e.g. a RunPod pod).
+      <a class="project-card" href="my-project/">
+        <div class="project-card-thumb">Label · Tech</div>
+        <div class="project-card-body">
+          <h2 class="project-card-title">Title</h2>
+          <p class="project-card-desc">Description.</p>
+          <span class="project-card-cta">Open &rarr;</span>
+        </div>
+      </a>
+      -->
+
+      <!-- 3D portfolio: LOCKED until it's finished. It's a <div> (not an <a>),
+           so it has no link and no access. To publish it: (1) remove the
+           projects/planet-portfolio line from .gitignore, (2) turn this back
+           into <a class="project-card" href="planet-portfolio/"> with its CTA. -->
+      <div class="project-card project-card-locked" aria-disabled="true" title="Work in progress — not available yet">
+        <div class="project-card-thumb">
+          Three.js · WebGL
+          <span class="project-card-badge" data-i18n="cardBadge">Coming soon</span>
+        </div>
+        <div class="project-card-body">
+          <h2 class="project-card-title" data-i18n="cardPlanetTitle">Interactive 3D portfolio</h2>
+          <p class="project-card-desc" data-i18n="cardPlanetDesc">
+            An explorable low-poly planet: you walk around with a 3D character, approach 5
+            points of interest (About me, Personality, Hobbies, Skills, CV) and toggle
+            day/night.
+          </p>
+          <span class="project-card-cta project-card-cta-locked" data-i18n="cardPlanetCta">In progress &#128274;</span>
+        </div>
+      </div>
+
+      <!-- Empty slot — replace with your next card (see template above) -->
+      <div class="project-card project-card-empty">
+        <p data-i18n="emptySlot">+ Your next project here</p>
+      </div>
+
+    </div>
+  </main>
+
+  <script type="module" src="js/main.js"></script>
+</body>
+</html>

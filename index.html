@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title data-i18n="heroTitle">Alan Alarcón · Creative Technology & Design</title>
+<meta name="description" data-i18n="heroDesc" data-i18n-attr="content" content="Alan Alarcón — creative technologist. Generative AI, interactive 3D web, and automation. Talk to my AI clone or download my CV." />
+
+<meta property="og:type" content="website" />
+<meta property="og:title" content="Alan Alarcón · Creative Technology & Design" />
+<meta property="og:description" content="Generative AI, interactive 3D web, and automation. Talk to my AI clone or download my CV." />
+<meta property="og:image" content="assets/og-image.jpg" />
+<meta name="twitter:card" content="summary_large_image" />
+
+<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32.png" />
+<link rel="icon" type="image/png" sizes="16x16" href="assets/favicon-16.png" />
+<link rel="apple-touch-icon" sizes="180x180" href="assets/apple-touch-icon.png" />
+
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="css/hero.css" />
+
+<script type="importmap">
+{ "imports": { "three": "https://unpkg.com/three@0.160.0/build/three.module.js" } }
+</script>
+</head>
+<body>
+
+  <!-- Background: custom WebGL shader (js/background.js) — a carved relief
+       revealed around the cursor by a noise-driven mask -->
+  <canvas id="bg-canvas" aria-hidden="true"></canvas>
+
+  <button class="lang-toggle" data-lang-toggle type="button" aria-label="Cambiar a español">ES</button>
+
+  <header class="nav">
+    <nav>
+      <a href="mailto:alanalarconoviedo@gmail.com" data-i18n="navContact">Get in touch</a>
+    </nav>
+  </header>
+
+  <!-- Scroll zone for the cinematic hero → About Me transition. .hero stays
+       pinned (sticky) while this extra height scrolls; see js/scroll-reveal.js.
+       On mobile / prefers-reduced-motion it's disabled (the .static class
+       added by JS) and everything stays put. -->
+  <div class="hero-scroll" id="hero-scroll">
+    <main class="hero">
+
+      <!-- 3D character stage -->
+      <div class="stage" id="stage">
+        <canvas id="char-canvas" data-i18n="avatarLabel" data-i18n-attr="aria-label" aria-label="Alan's 3D avatar"></canvas>
+        <div class="stage-shadow" aria-hidden="true"></div>
+        <div class="stage-loader" id="stage-loader">
+          <div class="stage-loader-ring"></div>
+          <span id="stage-loader-pct">0%</span>
+        </div>
+      </div>
+
+      <!-- Name and actions -->
+      <div class="intro" id="intro">
+        <h1 class="name">
+          <span class="name-first">Alan</span>
+          <span class="name-last">Alarcon</span>
+        </h1>
+        <p class="tagline" data-i18n="tagline">Creative Technology &amp; Design</p>
+
+        <div class="actions">
+          <a class="btn btn-primary" id="btn-projects" href="projects/"><span data-i18n="btnProjects">View Projects</span> <span class="btn-ico">&rarr;</span></a>
+          <a class="btn btn-ghost" href="assets/CV-Alan-Alarcon.pdf" download><span data-i18n="btnCv">Download CV</span> <span class="btn-ico">&darr;</span></a>
+        </div>
+      </div>
+
+      <!-- About Me: reveals on scroll, shares the same spot as .intro -->
+      <div class="about" id="about">
+        <h2 class="about-title" data-i18n="aboutTitle">About Me</h2>
+        <p class="about-text" data-i18n="aboutText">
+          I'm Alan Alarcón — creative technologist.
+         I come from IT operations and years of freelance creative work,
+         and I'm obsessed with how systems work: taking them apart, understanding every piece, and rebuilding them into something new.
+         Today that means generative AI pipelines, interactive 3D web, and AI-powered automation.
+         What drives me is the intersection of art and technology — art as the space where I discover and express what I can't say any other way,
+         technology as the craft of turning those ideas into systems that make people's lives genuinely easier.
+         Both are bottomless fields, and it's easy to lose yourself in them: hiking, cycling, and lately a lot of indoor climbing are how I come back to my body.
+        </p>
+      </div>
+
+    </main>
+  </div>
+
+  <!-- AI Clone: act 3 of the cinematic scroll (appears alongside the Iron
+       Sentinel, see scroll-reveal.js / sentinel.js) -->
+  <section class="clone" id="contact">
+    <h2 class="clone-title" data-i18n="cloneTitle">Talk to my AI Clone</h2>
+    <p class="clone-tagline" data-i18n="cloneTagline">Ask me anything</p>
+
+    <div class="clone-thread" id="clone-thread" aria-live="polite"></div>
+
+    <form class="clone-bar" id="clone-form">
+      <span class="clone-dot" aria-hidden="true"></span>
+      <input id="clone-input" type="text" data-i18n="clonePlaceholder" data-i18n-attr="placeholder" placeholder="Ask me anything..." autocomplete="off" maxlength="240" />
+      <button type="submit" data-i18n="cloneSend" data-i18n-attr="aria-label" aria-label="Send">&#10148;</button>
+    </form>
+  </section>
+
+  <script type="module" src="js/main.js"></script>
+</body>
+</html>

@@ -1,0 +1,13 @@
+# foto suelta en la raíz, no la usa el sitio (candidata vieja del shader de fondo)
+background.jpg
+
+# Portafolio 3D interactivo: TODAVÍA NO PUBLICADO (Alan lo está terminando).
+# Los archivos siguen en disco pero NO se despliegan → la tarjeta en /projects
+# está bloqueada ("Próximamente") y la URL no existe en el sitio publicado.
+# Para publicarlo: borrá estas 2 líneas + reconvertí la tarjeta en <a> (ver
+# comentario en projects/index.html) y commiteá.
+projects/planet-portfolio/
+
+# basura de SO
+Thumbs.db
+.DS_Store
