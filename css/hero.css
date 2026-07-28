@@ -198,11 +198,16 @@ body {
   max-height: 78vh;
   justify-self: end;     /* hugging the name column */
   user-select: none;
-  touch-action: none;    /* drag rotates the character, doesn't scroll */
+  touch-action: none;    /* mouse drag rotates the character instead of scrolling */
   -webkit-tap-highlight-color: transparent;
   cursor: grab;          /* fallback when the custom dot cursor doesn't apply */
 }
 .stage:active { cursor: grabbing; }
+/* touch/mobile: drag-to-rotate is disabled (mouse only, see character.js),
+   so let a swipe over the character scroll the page normally */
+@media (pointer: coarse) {
+  .stage { touch-action: auto; cursor: auto; }
+}
 #char-canvas {
   width: 100%;
   height: 100%;

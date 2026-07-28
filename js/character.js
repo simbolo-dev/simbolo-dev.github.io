@@ -19,12 +19,14 @@ import { CONFIG } from './config.js';
 const CHAR_H = 1.78;         // character height in scene units — sized to match the name/buttons
 const FADE = 0.35;           // crossfade between listening and agree
 
-// Drag to rotate (Y rotation of the root group; doesn't touch bones, so
-// it never interferes with the animation mixer). Only rotates while held
-// down INSIDE the character box; eases back to center on release. No angle
-// limit (like spinning a figurine).
+// Drag to rotate (Y rotation of the root group; doesn't touch bones, so it
+// never interferes with the animation mixer). The rotation STAYS where you
+// leave it — no snap back. No angle limit (like spinning a figurine).
 const DRAG_SENSITIVITY = 0.012;  // rad per dragged pixel
-const RETURN_EASE = 4;           // how fast it returns to center on release
+
+// real mouse only (hover + fine pointer) — excludes touch/mobile, where
+// dragging the character would fight page scrolling and isn't wanted
+const FINE_POINTER = matchMedia('(hover: hover) and (pointer: fine)').matches;
 
 // Scroll-driven cinematic yaw (see scroll-reveal.js): ADDED to the drag
 // yaw, not replacing it, so you can still spin with the mouse mid-scroll.
@@ -45,7 +47,7 @@ let lastX = 0;
 export const isReady = () => ready;
 
 const stageEl = document.getElementById('stage');
-if (stageEl) {
+if (stageEl && FINE_POINTER) {
   stageEl.addEventListener('pointerdown', (e) => {
     dragging = true;
     lastX = e.clientX;
@@ -159,7 +161,6 @@ export const getOpacityDebug = () => (material ? material.opacity : null);
 export function updateCharacter(dt) {
   if (mixer) mixer.update(dt);
   if (root) {
-    if (!dragging) yaw += (0 - yaw) * Math.min(1, dt * RETURN_EASE);   // ease back on release
-    root.rotation.y = yaw + scrollYaw;
+    root.rotation.y = yaw + scrollYaw;   // yaw stays where the user dragged it (no snap back)
   }
 }
