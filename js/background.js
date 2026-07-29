@@ -149,7 +149,12 @@ export function initBackground(imgPath = 'assets/background.jpg') {
   gl = canvas.getContext('webgl', { antialias: false, alpha: false, powerPreference: 'low-power', preserveDrawingBuffer: true });
   if (!gl) { console.warn('WebGL unavailable; background disabled'); return; }
 
-  reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  // static background on reduced-motion AND on mobile: no pointer-trail and no
+  // per-frame animation — the reveal-follows-cursor is a desktop hover effect
+  // that feels wrong while scrolling on a phone, and a still background is
+  // lighter on mobile
+  reduced = matchMedia('(prefers-reduced-motion: reduce)').matches
+         || matchMedia('(max-width: 880px)').matches;
   gl.getExtension('OES_standard_derivatives');   // needed for fwidth() in WebGL1
 
   const vs = compile(gl.VERTEX_SHADER, VERT);

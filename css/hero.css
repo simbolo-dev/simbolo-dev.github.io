@@ -503,19 +503,9 @@ body {
     gap: 8px;
     padding-top: 8px;
   }
-  .stage {
-    width: min(78vw, 340px);
-    aspect-ratio: 3 / 4;   /* on mobile the Sentinel never loads (see sentinel.js) — keep the original narrow framing for Polygon Man */
-    max-height: 46vh;
-    order: 2;
-    justify-self: center;
-  }
-  /* the character renders on the right of the canvas (camera offset), so nudge
-     the whole stage left to center it on screen. Mobile is always .static, and
-     `.hero-scroll.static .stage { transform:none }` (the reduced-motion desktop
-     fallback) would cancel this — re-apply here with matching specificity +
-     later source order so it wins. */
-  .hero-scroll.static .stage { transform: translateX(-20%); }
+  /* Polygon Man is desktop-only (see character.js) — hide its stage on mobile;
+     the climber (mobile-escalador.js, inside About Me) is the single avatar */
+  .stage { display: none; }
   .intro { order: 1; text-align: center; }
   .intro::before { background: radial-gradient(ellipse at center, var(--paper) 0%, transparent 68%); }
   .actions { align-items: center; }

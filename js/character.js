@@ -65,6 +65,10 @@ if (stageEl && FINE_POINTER) {
 }
 
 export function loadCharacter(onProgress) {
+  // Polygon Man is desktop-only — on mobile the climber (mobile-escalador.js)
+  // is the single avatar, so skip this ~2.8MB download entirely.
+  if (matchMedia('(max-width: 880px)').matches) return Promise.resolve();
+
   const loader = new GLTFLoader();
 
   return loader.loadAsync(CONFIG.CHARACTER.listen, (e) => {
