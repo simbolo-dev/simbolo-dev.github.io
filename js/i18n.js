@@ -50,6 +50,7 @@ export const I18N = {
     clonePlaceholder: 'Ask me anything...',
     cloneSend: 'Send',
     avatarLabel: "Alan's 3D avatar",
+    climberLabel: "Alan's 3D climber avatar",
     // --- projects ---
     projTitle: 'Projects · Alan Alarcón',
     projDesc: "Projects by Alan Alarcón — creative technologist. Generative AI, interactive 3D web, and automation.",
@@ -77,6 +78,7 @@ export const I18N = {
     clonePlaceholder: 'Pregúntame lo que quieras...',
     cloneSend: 'Enviar',
     avatarLabel: 'Avatar 3D de Alan',
+    climberLabel: 'Avatar 3D de Alan escalando',
     // --- projects ---
     projTitle: 'Proyectos · Alan Alarcón',
     projDesc: 'Proyectos de Alan Alarcón — creative technologist. IA generativa, web 3D interactiva y automatización.',

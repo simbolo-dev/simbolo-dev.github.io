@@ -17,6 +17,7 @@ import { initScrollReveal, updateScrollReveal } from './scroll-reveal.js';
 import { initAvatarEscalador, getEscaladorDebug } from './avatar-escalador.js';
 import { initSentinel, getSentinelDebug } from './sentinel.js';
 import { initI18n } from './i18n.js';
+import { initMobileEscalador } from './mobile-escalador.js';
 
 const loaderEl = document.getElementById('stage-loader');
 const pctEl = document.getElementById('stage-loader-pct');
@@ -28,6 +29,7 @@ initCursor();
 initScrollReveal();
 initAvatarEscalador();
 initSentinel();
+initMobileEscalador();   // climber viewer inside About Me — mobile only
 
 // ---- load the act-1 character (Polygon Man) ----
 char.loadCharacter((p) => { pctEl.textContent = Math.round(p * 100) + '%'; })

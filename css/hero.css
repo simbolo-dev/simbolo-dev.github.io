@@ -180,6 +180,10 @@ body {
   opacity: 0.7;
   font-style: italic;
 }
+/* climber viewer canvas inside About Me — desktop uses the shared cinematic
+   stage, so hide it here; the mobile media query below turns it on
+   (see js/mobile-escalador.js) */
+.mobile-avatar { display: none; }
 .hero-scroll.static .about {
   grid-row: 2;
   opacity: 1;
@@ -505,8 +509,13 @@ body {
     max-height: 46vh;
     order: 2;
     justify-self: center;
-    transform: translateX(-21%);  /* compensates the camera offset (the character sits at 71% of the canvas) */
   }
+  /* the character renders on the right of the canvas (camera offset), so nudge
+     the whole stage left to center it on screen. Mobile is always .static, and
+     `.hero-scroll.static .stage { transform:none }` (the reduced-motion desktop
+     fallback) would cancel this — re-apply here with matching specificity +
+     later source order so it wins. */
+  .hero-scroll.static .stage { transform: translateX(-20%); }
   .intro { order: 1; text-align: center; }
   .intro::before { background: radial-gradient(ellipse at center, var(--paper) 0%, transparent 68%); }
   .actions { align-items: center; }
@@ -522,6 +531,13 @@ body {
   .hero-scroll.static .about { grid-row: auto; }
   .about { order: 3; text-align: center; }
   .about-text { max-width: 34ch; margin: 0 auto; }
+  /* show the climber viewer above the About Me text on mobile */
+  .mobile-avatar {
+    display: block;
+    width: min(70vw, 280px);
+    aspect-ratio: 3 / 4;
+    margin: 0 auto 4px;
+  }
 
   /* .clone (act 3) on desktop hugs the left edge on purpose (composes with
      the Sentinel on the right) — on mobile there's no "right" to balance,

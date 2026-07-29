@@ -72,6 +72,10 @@
 
       <!-- About Me: reveals on scroll, shares the same spot as .intro -->
       <div class="about" id="about">
+        <!-- climber avatar shown ONLY on mobile (its own small 3D viewer,
+             see js/mobile-escalador.js); hidden on desktop, which uses the
+             shared cinematic stage instead -->
+        <canvas id="about-canvas" class="mobile-avatar" data-i18n="climberLabel" data-i18n-attr="aria-label" aria-label="Alan's 3D climber avatar"></canvas>
         <h2 class="about-title" data-i18n="aboutTitle">About Me</h2>
         <p class="about-text" data-i18n="aboutText">
           I'm Alan Alarcón — creative technologist.
