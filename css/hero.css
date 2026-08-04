@@ -48,8 +48,19 @@ body {
 .nav nav {
   display: flex;
   justify-content: center;
+  align-items: center;   /* line up the text link and the GitHub logo */
   gap: 56px;
 }
+/* GitHub logo link: no underline (it's an image, not text); subtle fade on hover */
+.nav a.nav-github { border-bottom: none; padding: 0; }
+.nav a.nav-github:hover { border-color: transparent; }
+.nav-icon {
+  height: 24px;   /* sized to sit alongside the "Get in touch" text */
+  width: auto;
+  display: block;
+  transition: opacity 0.2s;
+}
+.nav-github:hover .nav-icon { opacity: 0.6; }
 .nav a {
   font-size: 13px;
   font-weight: 600;
