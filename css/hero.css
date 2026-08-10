@@ -48,19 +48,29 @@ body {
 .nav nav {
   display: flex;
   justify-content: center;
-  align-items: center;   /* line up the text link and the GitHub logo */
+  align-items: flex-end;   /* bottom-align so both hover underlines sit on the same line */
   gap: 56px;
 }
-/* GitHub logo link: no underline (it's an image, not text); subtle fade on hover */
-.nav a.nav-github { border-bottom: none; padding: 0; }
-.nav a.nav-github:hover { border-color: transparent; }
+/* GitHub logo link: keeps the SAME underline-on-hover as the other nav links
+   (inherits .nav a's border-bottom); position/z-index are for the scrim below */
+.nav a.nav-github { position: relative; z-index: 0; }
+/* clarity scrim behind the logo — same idea as .intro::before: a soft paper
+   glow so the dark logo stays readable if the background trail passes behind it */
+.nav-github::before {
+  content: '';
+  position: absolute;
+  inset: -55% -25%;
+  background: radial-gradient(ellipse at center, var(--paper) 0%, transparent 70%);
+  opacity: 0.8;
+  filter: blur(12px);
+  z-index: -1;
+  pointer-events: none;
+}
 .nav-icon {
-  height: 24px;   /* sized to sit alongside the "Get in touch" text */
+  height: 30px;   /* a bit larger so the logo reads clearly */
   width: auto;
   display: block;
-  transition: opacity 0.2s;
 }
-.nav-github:hover .nav-icon { opacity: 0.6; }
 .nav a {
   font-size: 13px;
   font-weight: 600;
