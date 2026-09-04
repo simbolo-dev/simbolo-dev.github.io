@@ -20,9 +20,10 @@ export const CONFIG = {
   // 8s "Charged Axe Chop" entrance clip (LoopOnce).
   SENTINEL: 'assets/models/iron-sentinel/entrance.glb',
 
-  // AI clone endpoint. Empty = local demo replies.
-  // When wired up: should accept POST {message} and return {reply}.
-  CHAT_ENDPOINT: '',
+  // AI clone endpoint — the Cloudflare Worker in ../clone-api.
+  // Accepts POST {messages, lang} and returns {reply}.
+  // Leave empty to fall back to the local demo replies in js/chat.js.
+  CHAT_ENDPOINT: 'https://clone-api.alanalarconoviedo.workers.dev',
 
   // The background is a custom WebGL shader — see js/background.js.
 };
