@@ -2,11 +2,18 @@
 //  SENTINEL — 3rd character (Iron Sentinel, Meshy) that replaces
 //  Polygon Man in act 3 of the cinematic scroll (see scroll-reveal.js).
 //  Lazy loaded: NOT downloaded at all on mobile/reduced-motion (never
-//  shown there, and it's heavy), and on desktop the download starts only
-//  on entering act 2, so it's ready in the background by act 3.
+//  shown there), and on desktop the download starts on entering act 2,
+//  so it's ready in the background by act 3.
+//
+//  The GLB is meshopt-compressed + WebP texture: 19 MB → 3.4 MB. It used
+//  to arrive late (or not at all) on slower connections, leaving the
+//  shadow on stage with no character on it.
 // ============================================================
 import * as THREE from 'three';
 import { GLTFLoader } from 'https://unpkg.com/three@0.160.0/examples/jsm/loaders/GLTFLoader.js';
+// El GLB viene comprimido con meshopt (19 MB → 3.4 MB). Sin este
+// decodificador, GLTFLoader no sabe leer la geometría y falla.
+import { MeshoptDecoder } from 'https://unpkg.com/three@0.160.0/examples/jsm/libs/meshopt_decoder.module.js';
 import { scene } from './stage.js';
 import { CONFIG } from './config.js';
 
@@ -34,7 +41,7 @@ export function ensureSentinelLoading() {
   if (skip || loadStarted) return;
   loadStarted = true;
 
-  new GLTFLoader().loadAsync(CONFIG.SENTINEL).then((gltf) => {
+  new GLTFLoader().setMeshoptDecoder(MeshoptDecoder).loadAsync(CONFIG.SENTINEL).then((gltf) => {
     const model = gltf.scene;
 
     model.traverse((o) => {
