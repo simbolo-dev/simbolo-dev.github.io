@@ -100,13 +100,17 @@
     <h2 class="clone-title" data-i18n="cloneTitle">Talk to my AI Clone</h2>
     <p class="clone-tagline" data-i18n="cloneTagline">Ask me anything</p>
 
-    <div class="clone-thread" id="clone-thread" aria-live="polite"></div>
+    <!-- Panel: agrupa el hilo y la barra para darles un fondo propio, de
+         modo que la conversación no se pierda sobre el papel del fondo. -->
+    <div class="clone-panel">
+      <div class="clone-thread" id="clone-thread" aria-live="polite"></div>
 
-    <form class="clone-bar" id="clone-form">
-      <span class="clone-dot" aria-hidden="true"></span>
-      <input id="clone-input" type="text" data-i18n="clonePlaceholder" data-i18n-attr="placeholder" placeholder="Ask me anything..." autocomplete="off" maxlength="240" />
-      <button type="submit" data-i18n="cloneSend" data-i18n-attr="aria-label" aria-label="Send">&#10148;</button>
-    </form>
+      <form class="clone-bar" id="clone-form">
+        <span class="clone-dot" aria-hidden="true"></span>
+        <input id="clone-input" type="text" data-i18n="clonePlaceholder" data-i18n-attr="placeholder" placeholder="Ask me anything..." autocomplete="off" maxlength="240" />
+        <button type="submit" data-i18n="cloneSend" data-i18n-attr="aria-label" aria-label="Send">&#10148;</button>
+      </form>
+    </div>
   </section>
 
   <script type="module" src="js/main.js"></script>
