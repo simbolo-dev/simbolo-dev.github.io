@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Talk to Alan's AI Clone</title>
+    <meta name="description" content="Speak with Alan Alarcón's AI clone. Hold the button and ask anything." />
+
+    <link rel="icon" type="image/png" sizes="32x32" href="../assets/favicon-32.png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;500;600&display=swap"
+        rel="stylesheet" />
+
+    <style>
+        :root {
+            --ink: #221f1c;
+            --ink-soft: #6b6156;
+            --paper: #faf8f4;
+            --pill-dark: #221f1c;
+            --accent: #23d160;
+            --display: 'Anton', Impact, sans-serif;
+            --sans: 'Inter', system-ui, sans-serif;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            background: var(--paper);
+            color: var(--ink);
+            font-family: var(--sans);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 28px 20px 48px;
+            gap: 22px;
+        }
+
+        .nav {
+            align-self: flex-start;
+        }
+
+        .nav a {
+            color: var(--ink);
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            border-bottom: 1px solid transparent;
+            padding-bottom: 2px;
+        }
+
+        .nav a:hover {
+            border-color: var(--ink);
+        }
+
+        h1 {
+            font-family: var(--display);
+            font-weight: 400;
+            text-transform: uppercase;
+            font-size: clamp(30px, 6vw, 56px);
+            line-height: 1;
+            margin: 10px 0 0;
+            text-align: center;
+        }
+
+        .tagline {
+            color: var(--ink-soft);
+            font-size: 15px;
+            font-weight: 600;
+            margin: 0;
+        }
+
+        /* El visualizador. Se dibuja con JS en el paso 4c; por ahora
+     está vacío a propósito. */
+        #viz {
+            width: min(520px, 100%);
+            height: 120px;
+            display: block;
+        }
+
+        /* Botón de micrófono: mantener presionado para hablar. */
+        #mic {
+            width: 104px;
+            height: 104px;
+            border-radius: 50%;
+            border: none;
+            cursor: pointer;
+            background: var(--pill-dark);
+            color: #fff;
+            font-family: var(--sans);
+            font-size: 13px;
+            font-weight: 600;
+            display: grid;
+            place-items: center;
+            gap: 4px;
+            box-shadow: 0 10px 30px -10px rgba(34, 31, 28, .55);
+            transition: transform .12s ease, box-shadow .12s ease;
+            touch-action: none;
+            /* evita que el móvil haga scroll al mantener */
+            user-select: none;
+            -webkit-user-select: none;
+        }
+
+        #mic:hover {
+            transform: translateY(-2px);
+        }
+
+        #mic:active,
+        #mic.recording {
+            transform: scale(.95);
+        }
+
+        #mic.recording {
+            background: #b3261e;
+        }
+
+        #mic:disabled {
+            opacity: .45;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        #mic svg {
+            width: 42px;
+            height: 42px;
+            fill: currentColor;
+        }
+
+        #status {
+            min-height: 20px;
+            margin: 0;
+            font-size: 14px;
+            color: var(--ink-soft);
+            text-align: center;
+        }
+
+        #thread {
+            width: min(560px, 100%);
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        #thread:empty {
+            display: none;
+        }
+
+        .msg {
+            max-width: 85%;
+            padding: 10px 15px;
+            border-radius: 16px;
+            font-size: 14.5px;
+            line-height: 1.5;
+            animation: in .25s ease-out;
+        }
+
+        @keyframes in {
+            from {
+                opacity: 0;
+                transform: translateY(6px);
+            }
+        }
+
+        .msg.you {
+            align-self: flex-end;
+            background: var(--pill-dark);
+            color: #fff;
+            border-bottom-right-radius: 4px;
+        }
+
+        .msg.clone {
+            align-self: flex-start;
+            background: #fff;
+            border: 1px solid rgba(34, 31, 28, .10);
+            border-bottom-left-radius: 4px;
+        }
+
+        .hint {
+            font-size: 12.5px;
+            color: var(--ink-soft);
+            text-align: center;
+            max-width: 380px;
+            margin: 0;
+        }
+    </style>
+</head>
+
+<body>
+
+    <nav class="nav"><a href="../">&larr; Back</a></nav>
+
+    <h1>Talk to my AI clone</h1>
+    <p class="tagline">Hold the button and ask me anything</p>
+
+    <canvas id="viz" width="1040" height="240" aria-hidden="true"></canvas>
+
+    <button id="mic" type="button" aria-label="Hold to talk">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M12 14a3 3 0 0 0 3-3V5a3 3 0 0 0-6 0v6a3 3 0 0 0 3 3Z" />
+            <path
+                d="M19 11a1 1 0 1 0-2 0 5 5 0 0 1-10 0 1 1 0 1 0-2 0 7 7 0 0 0 6 6.92V21a1 1 0 1 0 2 0v-3.08A7 7 0 0 0 19 11Z" />
+        </svg>
+    </button>
+
+    <p id="status">Press and hold to speak</p>
+
+    <div id="thread" aria-live="polite"></div>
+
+    <p class="hint">Your microphone is only used while you hold the button. Nothing is recorded or stored.</p>
+
+    <script type="module" src="voice.js"></script>
+</body>
+
+</html>
