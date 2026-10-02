@@ -48,7 +48,8 @@ export const I18N = {
     cloneTitle: 'Talk to my AI Clone',
     cloneTagline: 'Ask me anything',
     clonePlaceholder: 'Ask me anything...',
-    cloneSend: 'Send',
+        cloneSend: 'Send',
+    cloneVoice: 'Or talk to me out loud →',
     avatarLabel: "Alan's 3D avatar",
     climberLabel: "Alan's 3D climber avatar",
     // --- projects ---
@@ -76,7 +77,8 @@ export const I18N = {
     cloneTitle: 'Habla con mi Clon IA',
     cloneTagline: 'Pregúntame lo que quieras',
     clonePlaceholder: 'Pregúntame lo que quieras...',
-    cloneSend: 'Enviar',
+       cloneSend: 'Enviar',
+    cloneVoice: 'O háblame en voz alta →',
     avatarLabel: 'Avatar 3D de Alan',
     climberLabel: 'Avatar 3D de Alan escalando',
     // --- projects ---
