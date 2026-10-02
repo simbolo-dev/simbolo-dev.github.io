@@ -146,7 +146,25 @@ function blobToBase64(blob) {
 // pointerdown cubre mouse, dedo y lápiz con un solo juego de eventos.
 // El "soltar" va en window, no en el botón: así, si mueves el dedo
 // un poco fuera del círculo antes de soltar, igual se detiene bien.
-mic.addEventListener('pointerdown', (e) => { e.preventDefault(); startRecording(); });
+
+// En iOS y Android, speechSynthesis solo despierta si lo llamas dentro
+// de un gesto real del usuario. Nuestra respuesta llega segundos
+// después, cuando el navegador ya "olvidó" que tocaste la pantalla, y
+// bloquea el audio sin avisar.
+//
+// La vacuna: al presionar el botón le mandamos una frase muda. Eso
+// cuenta como gesto y deja el sintetizador despierto el resto de la
+// sesión. En escritorio no hace falta, pero tampoco estorba.
+let ttsUnlocked = false;
+function unlockTTS() {
+  if (ttsUnlocked || !window.speechSynthesis) return;
+  const u = new SpeechSynthesisUtterance(' ');
+  u.volume = 0;
+  window.speechSynthesis.speak(u);
+  ttsUnlocked = true;
+}
+
+mic.addEventListener('pointerdown', (e) => { e.preventDefault(); unlockTTS(); startRecording(); });
 window.addEventListener('pointerup', stopRecording);
 window.addEventListener('pointercancel', stopRecording);
 
