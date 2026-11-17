@@ -1,12 +1,13 @@
 # Alan Alarcón — Portfolio
 
-Personal portfolio of **Alan Alarcón**, creative technologist — working at the
-intersection of generative AI, interactive 3D web, and automation.
+Personal portfolio of **Alan Alarcón**, AI Solutions Engineer and creative
+technologist — connecting AI agents to real business data, with a background in IT
+operations and design.
 
 Built with vanilla [Three.js](https://threejs.org/): no frameworks, no build step,
 zero dependencies to install.
 
-<!-- Live: https://<your-username>.github.io/  (fill in once GitHub Pages is enabled) -->
+Live: https://simbolo-dev.github.io/
 
 ## What's inside
 
@@ -14,8 +15,9 @@ zero dependencies to install.
   own rigged 3D avatar (a listening character, a climber, and an iron sentinel), a
   custom WebGL shader background that reveals a carved-relief texture around the
   cursor, and an AI-clone chat.
-- **`/projects/` — Gallery**: an index of projects. More are on the way — the first
-  entry (an explorable low-poly 3D world) is a work in progress and not published yet.
+- **`/projects/` — Gallery**: a voice agent for a company ERP (client work), the AI
+  voice clone, WhatsApp sales agents (client work), and an explorable low-poly 3D world
+  that is still a work in progress and not published yet.
 
 ## Tech highlights
 

@@ -19,8 +19,8 @@ const DEMO = [
   },
   {
     re: /cv|curr[ií]culum|resume/i,
-    en: "You can grab my CV with the 'Download CV' button. Short version: technical support engineer who also builds AI tools.",
-    es: "Puedes bajar mi CV con el botón 'Descargar CV'. Versión corta: ingeniero de soporte técnico que además construye herramientas con IA.",
+    en: "You can grab my CV with the 'Download CV' button. Short version: AI Solutions Engineer who connects AI agents to a company's real data, with a background in IT operations and design.",
+    es: "Puedes bajar mi CV con el botón 'Descargar CV'. Versión corta: AI Solutions Engineer que conecta agentes de IA a los datos reales de una empresa, con experiencia en operaciones de TI y diseño.",
   },
   {
     re: /skills?|habilidad|sabes hacer|tecnolog[ií]as|stack|tech/i,
@@ -44,8 +44,8 @@ const DEMO = [
   },
   {
     re: /qui[eé]n|who|eres|about|ti mismo|yourself/i,
-    en: "I'm Alan's clone: technical support engineer who builds things with AI. Ask me about his projects, skills, hobbies, or how to reach him.",
-    es: "Soy el clon de Alan: ingeniero de soporte técnico que construye cosas con IA. Pregúntame por sus proyectos, skills, hobbies o cómo contactarlo.",
+    en: "I'm Alan's clone. He's an AI Solutions Engineer: he connects AI agents to a company's real data, safely. Ask me about his projects, skills, hobbies, or how to reach him.",
+    es: "Soy el clon de Alan. Es AI Solutions Engineer: conecta agentes de IA a los datos reales de una empresa, de forma segura. Pregúntame por sus proyectos, skills, hobbies o cómo contactarlo.",
   },
   {
     re: /contact|contacto|email|correo|reach/i,

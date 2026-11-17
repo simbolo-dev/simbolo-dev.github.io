@@ -130,6 +130,7 @@ body {
 }
 
 .project-card-thumb {
+  position: relative; /* anchors .project-card-badge on every card */
   aspect-ratio: 16 / 10;
   background: linear-gradient(135deg, #dcd3c2, #b8a68a);
   display: flex;
@@ -206,6 +207,19 @@ body {
 .project-card-cta-locked {
   color: var(--ink-soft);
   font-style: italic;
+}
+
+/* STATIC card (client work): readable, but not a link — so no hover "lift"
+   that would suggest it can be clicked. */
+.project-card-static:hover {
+  transform: none;
+  box-shadow: none;
+  background: rgba(255, 255, 255, 0.5);
+}
+.project-card-static:hover .project-card-cta { transform: none; }
+.project-card-cta-muted {
+  color: var(--ink-soft);
+  font-weight: 500;
 }
 
 /* empty slot: same size as a real card, invites filling it */

@@ -4,7 +4,7 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title data-i18n="projTitle">Projects · Alan Alarcón</title>
-<meta name="description" data-i18n="projDesc" data-i18n-attr="content" content="Projects by Alan Alarcón — creative technologist. Generative AI, interactive 3D web, and automation." />
+<meta name="description" data-i18n="projDesc" data-i18n-attr="content" content="Projects by Alan Alarcón — AI Solutions Engineer. AI agents on real business data, voice, and interactive 3D web." />
 
 <link rel="icon" type="image/png" sizes="32x32" href="../assets/favicon-32.png" />
 <link rel="icon" type="image/png" sizes="16x16" href="../assets/favicon-16.png" />
@@ -49,14 +49,62 @@
       </a>
       -->
 
-      <!-- 3D portfolio: LOCKED until it's finished. It's a <div> (not an <a>),
-           so it has no link and no access. To publish it: (1) remove the
-           projects/planet-portfolio line from .gitignore, (2) turn this back
-           into <a class="project-card" href="planet-portfolio/"> with its CTA. -->
-      <div class="project-card project-card-locked" aria-disabled="true" title="Work in progress — not available yet">
+      <!-- 1. Bull Rocket MCP. Client work: no link, no client name, no real data.
+           <article> (not <a>) on purpose; .project-card-static removes the hover lift. -->
+      <article class="project-card project-card-static">
+        <div class="project-card-thumb">
+          MCP · PostgreSQL · Node.js
+          <span class="project-card-badge" data-i18n="badgeLive">In production</span>
+        </div>
+        <div class="project-card-body">
+          <h2 class="project-card-title" data-i18n="cardErpTitle">Voice agent for a company ERP</h2>
+          <p class="project-card-desc" data-i18n="cardErpDesc">
+            A custom MCP server that lets a non-technical executive ask the company's ERP
+            questions in plain language, by voice. A read-only database role with a column
+            allowlist keeps sensitive fields out of reach; every query is logged; login runs on
+            OAuth. The same data layer sends daily reports by email and WhatsApp.
+          </p>
+          <span class="project-card-cta project-card-cta-muted" data-i18n="ctaClient">Client work · details on request</span>
+        </div>
+      </article>
+
+      <!-- 2. AI clone: lives on this same site (/voice/) -->
+      <a class="project-card" href="../voice/">
+        <div class="project-card-thumb">
+          LLM · Cloudflare Workers · Voice
+          <span class="project-card-badge" data-i18n="badgeLive">In production</span>
+        </div>
+        <div class="project-card-body">
+          <h2 class="project-card-title" data-i18n="cardCloneTitle">AI voice clone</h2>
+          <p class="project-card-desc" data-i18n="cardCloneDesc">
+            The clone on this site: ask it about my work by text or out loud. A
+            retrieval-grounded assistant running on Cloudflare Workers.
+          </p>
+          <span class="project-card-cta" data-i18n="cardCloneCta">Talk to it &rarr;</span>
+        </div>
+      </a>
+
+      <!-- 3. WhatsApp agents (Laboratorios Silicio). Client work: no link. -->
+      <article class="project-card project-card-static">
+        <div class="project-card-thumb">Node.js · Express · PostgreSQL</div>
+        <div class="project-card-body">
+          <h2 class="project-card-title" data-i18n="cardWaTitle">WhatsApp sales agents</h2>
+          <p class="project-card-desc" data-i18n="cardWaDesc">
+            AI sales agents on WhatsApp for clinics and spas, covering the funnel from first
+            contact to close.
+          </p>
+          <span class="project-card-cta project-card-cta-muted" data-i18n="ctaClient">Client work · details on request</span>
+        </div>
+      </article>
+
+      <!-- 4. 3D portfolio: LOCKED. projects/planet-portfolio is in .gitignore, so a
+           link here would 404 on the live site. To publish it: remove that line from
+           .gitignore, commit the folder, and turn this <div> into
+           <a class="project-card" href="planet-portfolio/"> with a normal CTA. -->
+      <div class="project-card project-card-locked" aria-disabled="true">
         <div class="project-card-thumb">
           Three.js · WebGL
-          <span class="project-card-badge" data-i18n="cardBadge">Coming soon</span>
+          <span class="project-card-badge" data-i18n="badgeWip">In progress</span>
         </div>
         <div class="project-card-body">
           <h2 class="project-card-title" data-i18n="cardPlanetTitle">Interactive 3D portfolio</h2>
@@ -65,13 +113,8 @@
             points of interest (About me, Personality, Hobbies, Skills, CV) and toggle
             day/night.
           </p>
-          <span class="project-card-cta project-card-cta-locked" data-i18n="cardPlanetCta">In progress &#128274;</span>
+          <span class="project-card-cta project-card-cta-locked" data-i18n="cardPlanetCta">Coming soon &#128274;</span>
         </div>
-      </div>
-
-      <!-- Empty slot — replace with your next card (see template above) -->
-      <div class="project-card project-card-empty">
-        <p data-i18n="emptySlot">+ Your next project here</p>
       </div>
 
     </div>
